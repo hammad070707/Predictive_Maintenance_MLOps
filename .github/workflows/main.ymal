@@ -1,0 +1,35 @@
+name: MLOps Pipeline #eh tumhari automation ka naam hai jo GitHub par dikhega.
+
+on: # Developer ki zuban mein isse Trigger kehte hain. Yeh GitHub ko bata raha hai ke: "Bhai, yeh saara automation ka kaam khud-ba-khud kab shuru kaarana hai?"
+  push: 
+    branches: [main] ## Iska matlab hai: "Jaise hi main branch par koi 'git push' kare, foran kaam shuru kar do."
+    #main branch: Yeh tumhari "Asli aur Final Kitab" hai jo tumne duniya ko dikhani hai.
+    #Doosri branches (e.g. dev, test): Yeh tumhari "Rough Copies" hain jahan tum experiment kar rahe ho.
+    #Oye GitHub! Jab bhi main apne computer se 'git push' ki command chalaoon aur woh code meri 'main' branch mein jaye, toh foran niche wala saara kaam (Training, Docker build) shuru kar dena."
+
+jobs:
+  train-and-deploy: #Aapne apni job ka naam rakha hai train-and-deploy. Aap yahan kuch bhi likh sakte the, jaise mlops-automation. Yeh naam aapko GitHub ke dashboard par nazar aayega taake aapko pata chale kaunsi job chal rahi hai.
+    runs-on: ubuntu-latest #ahan tum GitHub ko order de rahe ho: "Bhai, mujhe aik Linux computer (Ubuntu) tayyar karke do taake main us par apna code chala sakun."
+    
+    steps: #"Marhalay" ya "Steps".
+    - name: Check Out #Yeh sirf aik Title hai jo dashboard par dikhega. Isse hamein pata chalta hai ke robot abhi kya kaam kar raha hai.
+      uses: actions/checkout@v2 #jab GitHub ne ubuntu-latest wala computer on kiya, toh woh Khali (Empty) tha, actions/checkout aik ready-made script (robot) hai. Iska kaam hai tumhari GitHub Repository se sara code uthana aur us naye ubuntu computer ke andar Copy kar dena.
+      
+    - name: Set up Python #Python ka software install karo
+      uses: actions/setup-python@v2 # Yeh aik ready-made script hai jo hamare liye Python ki bilkul saaf-suthri installation karti hai.
+      with:
+        python-version: '3.11' # Hum GitHub ko bata rahe hain ke "Bhai, mujhe wahi version chahiye jo mere laptop par tha (3.11), taake koi error na aaye."
+        
+    - name: Install Dependencies # Python toh install ho gaya, lekin abhi usme pandas, sklearn, aur mlflow nahi hain.
+      run: pip install -r requirements.txt #Yeh command container ke andar tumhari requirements.txt file ko parhegi aur aik-aik karke saari libraries install kar degi.
+      
+    - name: Run Pipeline
+      # Is dandi (pipe symbol) ka matlab hota hai ke "Agli saari lines aik saath commands hain".
+      run: |
+        python src/data_ingestion.py
+        python src/data_preprocessing.py
+        python src/model_training.py
+        python src/model_evaluation.py
+        
+    - name: Build Docker Image #Yeh sirf aik Title hai. Jab tum GitHub Actions ka dashboard dekhoge, toh wahan is step ke saath yeh naam likha nazar aayega taake tumhe chale ke ab "Packing" shuru ho gayi hai
+      run: docker build -t predictive-maintenance-app . #Bhai, Dockerfile ko parho aur image banao

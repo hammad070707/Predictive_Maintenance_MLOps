@@ -1,0 +1,16 @@
+# Virtual Environment (Docker apna naya banayega)
+venv/
+.venv/
+
+# Git aur DVC ka kachra
+.git/
+.dvc/
+.gitignore
+.dockerignore
+
+# Asli Data (Humein prediction ke liye CSV nahi chahiye, kyunke model MLflow mein hai)
+data/*.csv
+
+# Python Cache
+__pycache__/
+*.pyc

@@ -1,7 +1,29 @@
+# --- Virtual Environment (SABSE ZAROORI) ---
 venv/
 .venv/
+env/
+bin/
+include/
+lib/
+share/
+
+# --- Python Cache ---
 __pycache__/
-*.pyc
+*.py[cod]
+*$py.class
+
+# --- MLflow (Local Data) ---
+mlruns/
+mlflow.db
+
+# --- Data & DVC ---
+data/*.csv
+.dvc/cache/
+
+# --- Trained Model ---
+best_model/
+
+# --- OS & IDE Files ---
+.ipynb_checkpoints/
 .DS_Store
-.env
-data/   
+Thumbs.db
